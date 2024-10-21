@@ -1,3 +1,4 @@
+var animalContainer = document.getElementById("animal-info");
 var btn = document.getElementById("btn");
 
 btn.addEventListener("click", function() {
@@ -11,5 +12,5 @@ ourRequest.send();
 });
 
 function renderHTML(data) {
-
+animalContainer.insertAdjacentHTML('beforeend', 'testing 1')
 }
