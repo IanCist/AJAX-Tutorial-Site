@@ -3,65 +3,35 @@ const animalContainer = $('#animal-info');
 const btn = $('#btn');
 
 btn.on('click', function () {
-    $.ajax({ 
+    $.ajax({
         url: 'https://learnwebcode.github.io/json-example/animals-${pageCounter}.json',
-        method:'GET',
-        success: function(data){
+        method: 'GET',
+        success: function (data) {
             renderHTML(data)
             pageCounter++
+            if (pageCounter > 3) {
+                btn.addClass("hide-me");
+            }
+        },
+        error: function(){
+            console.log('Connection error')
         }
     })
 })
 
-
-
-
-
-
-
-
-
-
-
-
-
-btn.addEventListener("click", function () {
-    var ourRequest = new XMLHttpRequest();
-    ourRequest.open('GET', 'https://learnwebcode.github.io/json-example/animals-' + pageCounter + '.json');
-    ourRequest.onload = function () {
-        var ourData = JSON.parse(ourRequest.responseText);
-        renderHTML(ourData);
-    };
-    ourRequest.send();
-    pageCounter++
-    if (pageCounter > 3) {
-        btn.classList.add("hide-me");
-    }
-});
-
 function renderHTML(data) {
-    var htmlString = "";
-
-    for (i = 0; i < data.length; i++) {
-        htmlString += "<p>" + data[i].name + " is a " + data[i].species + " that likes to eat ";
-        for (ii = 0; ii < data[i].foods.likes.length; ii++) {
-            if (ii == 0) {
-                htmlString += data[i].foods.likes[ii];
-            } else {
-                htmlString += " and " + data[i].foods.likes[ii];
-            }
-        }
-        htmlString += ' and dislikes ';
-
-        for (ii = 0; ii < data[i].foods.dislikes.length; ii++) {
-            if (ii == 0) {
-                htmlString += data[i].foods.dislikes[ii];
-            } else {
-                htmlString += " and " + data[i].foods.dislikes[ii];
-            }
-        }
-
-        htmlString += '.</p>'
-    }
-    animalContainer.insertAdjacentHTML('beforeend', htmlString)
+    let htmlString = ''
+    data.forEach(function(animal){
+        htmlString += `<p>${animal.name} is a ${animal.species} that likes to eat`
+        animal.foods.likes.forEach(function(like, index){
+            htmlString += index === 0 ? like : ` and ${like}`
+        })
+        htmlString += ' and dislikes'
+        animal.foods.dislikes.forEach(function(dislike, index){
+            htmlString += index === 0 ? dislike : ` and ${dislike}`
+    })
+    animalContainer.append(htmlString)
 }
+
+
+
